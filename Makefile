@@ -8,3 +8,9 @@ test:
 
 coverage: 
 	pytest -x --cov=injectark tests/ --cov-report term-missing -s
+
+
+PART ?= patch
+
+version:
+	bump2version $(PART) pyproject.toml injectark/__init__.py --tag --commit
