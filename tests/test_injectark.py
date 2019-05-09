@@ -1,3 +1,4 @@
+from pytest import raises
 from .conftest import A, B, C, D, X, Y
 
 
@@ -93,3 +94,16 @@ def test_resolver_registry_fetch_unique(resolver):
     }
     result = resolver._registry_fetch('B')
     assert result is False
+
+
+def test_resolver_get_item(resolver):
+    instance = resolver['A']
+    assert isinstance(instance, A)
+    instance = resolver['B']
+    assert isinstance(instance, B)
+    assert len(resolver.registry) == 2
+
+
+def test_resolver_get_item_not_found(resolver):
+    with raises(KeyError):
+        instance = resolver['E']

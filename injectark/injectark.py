@@ -7,7 +7,14 @@ class Injectark:
         self.parent = parent
         self.factory = factory
         self.strategy = strategy
-        self.registry = {}  # type: Dict[str, Any]
+        self.registry: Dict[str, Any] = {}
+
+    def __getitem__(self, key: str):
+        instance = self.resolve(key)
+        if not instance:
+            raise KeyError(
+                f"The '{key}' resource can't be resolved by the injector.")
+        return instance
 
     def resolve(self, resource: str):
         fetched = self._registry_fetch(resource)
