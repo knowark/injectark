@@ -80,7 +80,6 @@ def test_resolver_resolve_a_resource_its_parent_know(
     instance = resolver.resolve('Y')
     assert isinstance(instance, Y)
     assert instance == resolver.parent.registry['Y']
-    # assert instance == resolver.registry['Y']
     assert len(resolver.parent.registry) == 2
     assert len(resolver.registry) == 0
 
@@ -107,3 +106,17 @@ def test_resolver_get_item(resolver):
 def test_resolver_get_item_not_found(resolver):
     with raises(KeyError):
         instance = resolver['E']
+
+
+def test_resolver_breaks_on_missing_dependencies(resolver):
+    class IncompleteFactory:
+        def extract(self, method: str):
+            return getattr(self, f"_{method}", None)
+
+        def _standard_c(self, a: A, b: B):
+            return C(a, b)
+
+    resolver.factory = IncompleteFactory()
+
+    with raises(KeyError):
+        instance = resolver['C']

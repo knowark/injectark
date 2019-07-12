@@ -26,7 +26,7 @@ class D:
 def standard_factory():
     class StandardFactory:
         def extract(self, method: str):
-            return getattr(self, "_{0}".format(method), None)
+            return getattr(self, f"_{method}", None)
 
         def _standard_a(self):
             return A()

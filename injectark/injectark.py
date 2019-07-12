@@ -55,7 +55,7 @@ class Injectark:
 
             dependency_instances = []
             for dependency in dependencies:
-                dependency_instance = self.resolve(dependency)
+                dependency_instance = self[dependency]
                 dependency_instances.append(dependency_instance)
 
             instance = builder(*dependency_instances)
