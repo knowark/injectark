@@ -1,9 +1,12 @@
 from inspect import signature
-from typing import Any, Dict
+from typing import Any, Dict, Optional
+from .factory import Strategy, Factory
 
 
 class Injectark:
-    def __init__(self, strategy=None, factory=None,  parent=None) -> None:
+    def __init__(self, strategy: Strategy = None,
+                 factory: Factory = None,
+                 parent: 'Injectark' = None) -> None:
         self.parent = parent
         self.factory = factory
         self.strategy = strategy
