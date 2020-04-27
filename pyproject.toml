@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "injectark"
-version = "0.4.0"
+version = "0.4.1"
 description = "Dependency Injector for Python"
 authors = ["eecheverry <eecheverry@nubark.com>"]
 license = "MIT"
