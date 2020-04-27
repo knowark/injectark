@@ -20,7 +20,7 @@ class FactoryBuilder:
         self.factories = {factory.__name__: factory
                           for factory in factories}
 
-    def build(self, config: Dict[str, str], name: str = '') -> Factory:
-        name = config.get('factory', name)
+    def build(self, config: Dict[str, str], name: str = None) -> Factory:
+        name = name or config.get('factory', '')
         factory = self.factories[name]
         return factory(config)  # type: ignore

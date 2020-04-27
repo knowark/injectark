@@ -99,3 +99,8 @@ def test_factory_builder(factory_builder):
     factory = factory_builder.build({'key': 'value'}, name='HttpFactory')
     assert type(factory).__name__ == 'HttpFactory'
     factory.config == {'key': 'value'}
+
+    factory = factory_builder.build(
+        {'factory': 'MemoryFactory', 'key': 'value'}, name='HttpFactory')
+    assert type(factory).__name__ == 'HttpFactory'
+    factory.config == {'key': 'value'}
