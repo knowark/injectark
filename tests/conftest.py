@@ -98,10 +98,36 @@ def core_strategy():
 
 
 @fixture
+def basic_factory():
+    class BasicFactory:
+        def extract(self, method: str):
+            return getattr(self, f"{method}", None)
+
+        def a(self):
+            return A()
+
+        def b(self):
+            return B()
+
+        def c(self, a: A, b: B):
+            return C(a, b)
+
+        def d(self, b: B, c: C):
+            return D(b, c)
+
+    return BasicFactory()
+
+
+@fixture
 def resolver(standard_strategy, standard_factory):
-    return Injectark(strategy=standard_strategy, factory=standard_factory)
+    return Injectark(factory=standard_factory, strategy=standard_strategy)
 
 
 @fixture
 def parent_resolver(core_strategy, core_factory):
-    return Injectark(strategy=core_strategy, factory=core_factory)
+    return Injectark(factory=core_factory, strategy=core_strategy)
+
+
+@fixture
+def basic_resolver(basic_factory):
+    return Injectark(basic_factory)

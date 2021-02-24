@@ -54,7 +54,7 @@ def test_resolver_forge(resolver, standard_strategy, standard_factory):
     parent = resolver
 
     resolver = parent.forge(
-        strategy=standard_strategy, factory=standard_factory)
+        factory=standard_factory, strategy=standard_strategy)
 
     assert resolver is not None
     assert resolver.parent is parent
@@ -120,3 +120,11 @@ def test_resolver_breaks_on_missing_dependencies(resolver):
 
     with raises(KeyError):
         instance = resolver['C']
+
+
+def test_basic_resolver_without_dependencies(basic_resolver):
+    instance = basic_resolver.resolve('A')
+    assert isinstance(instance, A)
+    instance = basic_resolver.resolve('B')
+    assert isinstance(instance, B)
+    assert len(basic_resolver.registry) == 2

@@ -1,16 +1,18 @@
+import re
 from inspect import signature
 from typing import Any, Dict, Optional
 from .factory import Strategy, Factory
 
 
 class Injectark:
-    def __init__(self, strategy: Strategy = None,
-                 factory: Factory = None,
+    def __init__(self, factory: Factory = None,
+                 strategy: Strategy = None,
                  parent: 'Injectark' = None) -> None:
         self.parent = parent
         self.factory = factory
-        self.strategy = strategy
+        self.strategy = strategy or {}
         self.registry: Dict[str, Any] = {}
+        self.pattern = re.compile(r'(?<!^)(?=[A-Z])')
 
     def __getitem__(self, key: str):
         instance = self.resolve(key)
@@ -29,7 +31,7 @@ class Injectark:
 
         return instance
 
-    def forge(self, strategy, factory):
+    def forge(self, factory, strategy):
         return Injectark(parent=self, strategy=strategy, factory=factory)
 
     def _registry_fetch(self, resource: str):
@@ -49,7 +51,8 @@ class Injectark:
     def _dependency_build(self, resource: str, persist=True):
         instance = None
         rule = self.strategy.get(resource, {'method': ''})
-        builder = self.factory.extract(rule['method'])
+        method = rule['method'] or self.pattern.sub('_', resource).lower()
+        builder = self.factory.extract(method)
 
         if builder:
             dependencies = [
