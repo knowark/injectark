@@ -128,3 +128,21 @@ def test_basic_resolver_without_dependencies(basic_resolver):
     instance = basic_resolver.resolve('B')
     assert isinstance(instance, B)
     assert len(basic_resolver.registry) == 2
+
+
+def test_basic_resolver_restricted_access_dependencies(basic_resolver):
+    factory = basic_resolver.factory
+    setattr(factory, 'public', ['C', 'D'])
+
+    with raises(KeyError):
+        basic_resolver['A']
+
+    instance = basic_resolver['C']
+    assert isinstance(instance, C)
+    instance = basic_resolver['D']
+    assert isinstance(instance, D)
+
+    with raises(KeyError):
+        basic_resolver['B']
+
+    assert len(basic_resolver.registry) == 4

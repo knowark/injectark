@@ -15,19 +15,24 @@ class Injectark:
         self.pattern = re.compile(r'(?<!^)(?=[A-Z])')
 
     def __getitem__(self, key: str):
-        instance = self.resolve(key)
-        if not instance:
+        public = getattr(self.factory, 'public', [])
+        if public and key not in public:
             raise KeyError(
-                f"The '{key}' resource can't be resolved by the injector.")
-        return instance
+                f"No public access for resource '{key}'.")
 
-    def resolve(self, resource: str):
+        return self.resolve(key, strict=True)
+
+    def resolve(self, resource: str, strict: bool = False):
         fetched = self._registry_fetch(resource)
         if fetched:
             return fetched
 
         persist = not self.strategy.get(resource, {}).get('ephemeral', False)
         instance = self._dependency_build(resource, persist)
+
+        if strict and not instance:
+            raise KeyError(
+                f"The '{resource}' resource could not be resolved.")
 
         return instance
 
@@ -61,7 +66,7 @@ class Injectark:
 
             dependency_instances = []
             for dependency in dependencies:
-                dependency_instance = self[dependency]
+                dependency_instance = self.resolve(dependency, strict=True)
                 dependency_instances.append(dependency_instance)
 
             instance = builder(*dependency_instances)
