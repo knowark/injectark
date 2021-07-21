@@ -1,3 +1,6 @@
+PROJECT = injectark
+PART ?= patch
+
 clean:
 	find . -name '__pycache__' -exec rm -fr {} +
 	find . -name '.pytest_cache' -exec rm -fr {} +
@@ -6,11 +9,11 @@ clean:
 test:
 	pytest
 
-coverage: 
-	pytest -x --cov=injectark tests/ --cov-report term-missing -s
+coverage:
+	pytest -x --cov=$(PROJECT) tests/ --cov-report term-missing -s
 
-
-PART ?= patch
+push:
+	git push && git push --tags
 
 version:
-	bump2version $(PART) pyproject.toml injectark/__init__.py --tag --commit
+	bump2version $(PART) pyproject.toml $(PROJECT)/__init__.py --tag --commit
