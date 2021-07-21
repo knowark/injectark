@@ -103,6 +103,12 @@ def test_resolver_get_item(resolver):
     assert len(resolver.registry) == 2
 
 
+def test_resolver_config(resolver):
+    instance = resolver['A']
+    assert isinstance(instance, A)
+    assert resolver.config == resolver.factory.config
+
+
 def test_resolver_get_item_not_found(resolver):
     with raises(KeyError):
         instance = resolver['E']

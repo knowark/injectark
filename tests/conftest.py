@@ -1,4 +1,5 @@
 from pytest import fixture
+from injectark.factory import Factory
 from injectark.injectark import Injectark
 
 
@@ -24,7 +25,7 @@ class D:
 
 @fixture
 def standard_factory():
-    class StandardFactory:
+    class StandardFactory(Factory):
         def extract(self, method: str):
             return getattr(self, f"_{method}", None)
 

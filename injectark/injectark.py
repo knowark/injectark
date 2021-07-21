@@ -1,7 +1,7 @@
 import re
 from inspect import signature
 from typing import Any, Dict, Optional
-from .factory import Strategy, Factory
+from .factory import Strategy, Factory, Config
 
 
 class Injectark:
@@ -13,6 +13,10 @@ class Injectark:
         self.strategy = strategy or {}
         self.registry: Dict[str, Any] = {}
         self.pattern = re.compile(r'(?<!^)(?=[A-Z])')
+
+    @property
+    def config(self) -> Config:
+        return getattr(self.factory, 'config', {})
 
     def __getitem__(self, key: str):
         public = getattr(self.factory, 'public', [])
